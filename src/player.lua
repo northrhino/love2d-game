@@ -88,13 +88,13 @@ player.anim = player.animations.idleDown
 player.buffer = {} -- input buffer
 
 
-levelHeight1 = 20
-levelHeight2 = 40
+levelHeight1 = 16
+levelHeight2 = 32
 
 function player:update(dt)
 
     --d1 = tostring(player.jumping)
-    --d1 = player.z
+    d1 = player.z
     d2 = player.height
 
     player.shadowY = player:getY()+6
@@ -298,7 +298,7 @@ function player:update(dt)
             player:checkVerticalTransition()
             player:checkWater()
             player.anim:update(dt)
-            d1 = dt
+
             local heightDiff = 0
   
             if player.velocityY ~= 0 then
@@ -315,7 +315,7 @@ function player:update(dt)
                 player.state = 0              
             end
 
-            player.height = math.abs(heightDiff)
+            player.height = math.max(0, player.ground - player.y)
 
             if player.height > 10 then
                 player.jumping = true
