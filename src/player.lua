@@ -37,7 +37,7 @@ player.shadowScale = 1
 player.ground = 0
 player.velocityY = 0
 player.jumpHeight = -180
-player.gravity = -450
+player.gravity = -500
 player.offsetYDefault = 10.5
 player.offsetY = player.offsetYDefault
 player.height = 0
@@ -87,14 +87,14 @@ player.anim = player.animations.idleDown
 
 player.buffer = {} -- input buffer
 
-
+levelHeightStep = 16
 levelHeight1 = 16
 levelHeight2 = 32
 
 function player:update(dt)
 
     --d1 = tostring(player.jumping)
-    d1 = player.z
+    d1 = player.ground
     d2 = player.height
 
     player.shadowY = player:getY()+6
@@ -552,14 +552,14 @@ function player:checkVerticalTransition()
     if player:enter('Ground1') then
 
         if player.z == 1 then
-            player:setY(player:getY()-levelHeight2)
-            player.ground = player.ground - levelHeight2
-            player.offsetY = player.offsetY + levelHeight2
+            player:setY(player:getY()-levelHeightStep)
+            player.ground = player.ground - levelHeightStep
+            player.offsetY = player.offsetY + levelHeightStep
             player.z = 2
         else
-            player:setY(player:getY()-levelHeight1)
-            player.ground = player.ground - levelHeight1
-            player.offsetY = player.offsetY + levelHeight1
+            player:setY(player:getY()-levelHeightStep)
+            player.ground = player.ground - levelHeightStep
+            player.offsetY = player.offsetY + levelHeightStep
             player.z = 1
         end
         
