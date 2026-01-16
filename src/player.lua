@@ -316,18 +316,14 @@ function player:update(dt)
             end
 
             player.height = math.max(0, player.ground - player.y)
+            player.jumping = player.height > 10
 
-            if player.height > 10 then
-                player.jumping = true
-                player.shadowScale = 0.9
-            else
-                player.jumping = false
-                player.shadowScale = 1
-            end
+            local maxHeight = 30      -- height where shadow is smallest
+            local minScale  = 0.6     -- smallest shadow size
+            local maxScale  = 1.0     -- shadow size on ground
+            local t = math.min(player.height / maxHeight, 1)
+            player.shadowScale = maxScale - t * (maxScale - minScale)
 
-            if player.height > 20 then
-                player.shadowScale = 0.8
-            end
 
     elseif player.state >= 1 and player.state < 2 then
 
