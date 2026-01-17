@@ -87,14 +87,18 @@ player.anim = player.animations.idleDown
 
 player.buffer = {} -- input buffer
 
-levelHeightStep = 16
-levelHeight1 = 16
-levelHeight2 = 32
+-- local variables to control jumping
+local levelHeightStep = 16
+local levelHeight1 = 16
+local levelHeight2 = 32
+local maxHeight = 30      -- height where shadow is smallest
+local minScale  = 0.6     -- smallest shadow size
+local maxScale  = 1.0     -- shadow size on ground
 
 function player:update(dt)
 
     --d1 = tostring(player.jumping)
-    d1 = player.ground
+    d1 = player.z
     d2 = player.height
 
     player.shadowY = player:getY()+6
@@ -318,9 +322,7 @@ function player:update(dt)
             player.height = math.max(0, player.ground - player.y)
             player.jumping = player.height > 10
 
-            local maxHeight = 30      -- height where shadow is smallest
-            local minScale  = 0.6     -- smallest shadow size
-            local maxScale  = 1.0     -- shadow size on ground
+
             local t = math.min(player.height / maxHeight, 1)
             player.shadowScale = maxScale - t * (maxScale - minScale)
 
@@ -578,20 +580,25 @@ function player:checkWater()
  
     if player:exit('Ground1') then  
 
-        if player.jumping == false then
-            
+        if player.jumping then
+             if player.z == 1 then    
+                player:setY(player:getY()+levelHeight1)
+                player.ground = player.ground + levelHeight1
+                player.z = 0
+            end
+        else
             if player.z == 1 then    
                 player:setY(player:getY()+levelHeight1)
                 player.ground = player.ground + levelHeight1
                 player.z = 0
-                player.height = 0
+               
             end
 
             if player.z > 1 then
                 player:setY(player:getY()+levelHeight2)
                 player.ground = player.ground + levelHeight2
                 player.z = 0
-                player.height = 0
+    
             end
 
         end
@@ -847,6 +854,15 @@ function player:jump()
     player.state = 0.6    
     player.y = player:getY()
     player.ground = player.y
+    
+  --[[   if player.z ==1 then
+         player.ground = player.ground + levelHeight1
+    end
+
+    if player.z ==2 then
+         player.ground = player.ground + levelHeight2
+    end ]]
+
     player.velocityY = player.jumpHeight
 
     local dirX = 0

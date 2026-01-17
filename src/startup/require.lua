@@ -30,6 +30,7 @@ function requireAll()
 
     require("src/environment/tree")
     require("src/environment/water")
+    require("src/environment/mist")
 
     require("src/items/item")
     require("src/items/loot")

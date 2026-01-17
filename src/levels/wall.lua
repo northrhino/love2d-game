@@ -77,7 +77,7 @@ function walls:update(dt)
                 walls[i]:setCollisionClass('WallTemp')
             end
         else
-            if walls[i].name == "z1" and player.z == 0 then
+            if walls[i].name == "z1" and player.z < 1 then
                 walls[i]:setCollisionClass('Wall')
             end 
 
