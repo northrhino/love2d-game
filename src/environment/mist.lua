@@ -1,33 +1,51 @@
+-- mist.lua
 mist = {}
-mist.sprite = love.graphics.newImage("sprites/effects/mist.png")
-mist.x = 0
-mist.y = 0
-mist.speedx = -10
-mist.speedy = 8
-mist.alpha = 0.6
+mist.layers = {
+    {
+        sprite = love.graphics.newImage("sprites/environment/mist.png"),
+        x = 0, y = 0,
+        speedx = -6, speedy = -2,
+        alpha = 0.1,
+        scale = 1.0
+    }
+--[[     ,
+    {
+        sprite = love.graphics.newImage("sprites/environment/mist.png"),
+        x = 0, y = 0,
+        speedx = -12, speedy = -4,   -- faster for parallax
+        alpha = 0.1,
+        scale = 1.2                  -- slightly larger for depth
+    } ]]
+}
 
 function mist:update(dt)
-    mist.x = mist.x + mist.speedx * dt
-    mist.y = mist.y + mist.speedy * dt
-
-    local w = mist.sprite:getWidth()
-    local h = mist.sprite:getHeight()
-
-    -- perfect wrapping using modulo
-    mist.x = mist.x % w
-    mist.y = mist.y % h
+    for _, layer in ipairs(self.layers) do
+        layer.x = (layer.x + layer.speedx * dt) % layer.sprite:getWidth()
+        layer.y = (layer.y + layer.speedy * dt) % layer.sprite:getHeight()
+    end
 end
 
 function mist:draw()
-    love.graphics.setColor(1, 1, 1, mist.alpha)
+    for _, layer in ipairs(self.layers) do
+        love.graphics.setColor(1, 1, 1, layer.alpha)
 
-    local w = mist.sprite:getWidth()
-    local h = mist.sprite:getHeight()
+        local w = layer.sprite:getWidth() * layer.scale
+        local h = layer.sprite:getHeight() * layer.scale
 
-    love.graphics.draw(mist.sprite, mist.x, mist.y)
-    love.graphics.draw(mist.sprite, mist.x - w, mist.y)
-    love.graphics.draw(mist.sprite, mist.x, mist.y - h)
-    love.graphics.draw(mist.sprite, mist.x - w, mist.y - h)
+        -- how many tiles needed to cover the screen?
+        local sw = love.graphics.getWidth()
+        local sh = love.graphics.getHeight()
+
+        -- start drawing slightly before the screen to avoid gaps
+        local startX = -w + (layer.x % w)
+        local startY = -h + (layer.y % h)
+
+        for x = startX, sw, w do
+            for y = startY, sh, h do
+                love.graphics.draw(layer.sprite, x, y, 0, layer.scale, layer.scale)
+            end
+        end
+    end
 
     love.graphics.setColor(1, 1, 1, 1)
 end

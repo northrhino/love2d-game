@@ -68,9 +68,10 @@ function drawCamera()
 
     if gameMap.properties.rain then
         rain:draw()
+        mist:draw()
     end
 
-    mist:draw()
+    
 
     
 end

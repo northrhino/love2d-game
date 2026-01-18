@@ -56,8 +56,9 @@ function updateGame(dt)
         end
 
         rain:update(dt)
+            mist:update(dt)
     end
 
-    mist:update(dt)
+
 
 end
