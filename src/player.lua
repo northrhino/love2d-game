@@ -36,7 +36,7 @@ player.shadowY = 0
 player.shadowScale = 1
 player.ground = 0
 player.velocityY = 0
-player.jumpHeight = -180
+player.jumpHeight = -250
 player.gravity = -500
 player.offsetYDefault = 10.5
 player.offsetY = player.offsetYDefault
@@ -59,29 +59,48 @@ player:setCollisionClass("Player")
 player:setFixedRotation(true)
 player:setLinearDamping(player.baseDamping)
 
-player.grid = anim8.newGrid(19, 21, sprites.playerSheet:getWidth(), sprites.playerSheet:getHeight())
+player.grid = anim8.newGrid(19, 21, sprites.playerSheet:getWidth(),
+                            sprites.playerSheet:getHeight())
 
 player.animations = {}
-player.animations.downRight = anim8.newAnimation(player.grid('1-2', 1), player.animSpeed)
-player.animations.downLeft = anim8.newAnimation(player.grid('1-2', 1), player.animSpeed)
-player.animations.upRight = anim8.newAnimation(player.grid('1-2', 2), player.animSpeed)
-player.animations.upLeft = anim8.newAnimation(player.grid('1-2', 2), player.animSpeed)
-player.animations.swordDownRight = anim8.newAnimation(player.grid('1-2', 1), player.animSpeed)
-player.animations.swordDownLeft = anim8.newAnimation(player.grid('1-2', 1), player.animSpeed)
-player.animations.swordUpRight = anim8.newAnimation(player.grid('1-2', 2), player.animSpeed)
-player.animations.swordUpLeft = anim8.newAnimation(player.grid('1-2', 2), player.animSpeed)
-player.animations.useDownRight = anim8.newAnimation(player.grid(2, 1), player.animSpeed)
-player.animations.useDownLeft = anim8.newAnimation(player.grid(2, 1), player.animSpeed)
-player.animations.useUpRight = anim8.newAnimation(player.grid(2, 2), player.animSpeed)
-player.animations.useUpLeft = anim8.newAnimation(player.grid(2, 2), player.animSpeed)
+player.animations.downRight = anim8.newAnimation(player.grid('1-2', 1),
+                                                 player.animSpeed)
+player.animations.downLeft = anim8.newAnimation(player.grid('1-2', 1),
+                                                player.animSpeed)
+player.animations.upRight = anim8.newAnimation(player.grid('1-2', 2),
+                                               player.animSpeed)
+player.animations.upLeft = anim8.newAnimation(player.grid('1-2', 2),
+                                              player.animSpeed)
+player.animations.swordDownRight = anim8.newAnimation(player.grid('1-2', 1),
+                                                      player.animSpeed)
+player.animations.swordDownLeft = anim8.newAnimation(player.grid('1-2', 1),
+                                                     player.animSpeed)
+player.animations.swordUpRight = anim8.newAnimation(player.grid('1-2', 2),
+                                                    player.animSpeed)
+player.animations.swordUpLeft = anim8.newAnimation(player.grid('1-2', 2),
+                                                   player.animSpeed)
+player.animations.useDownRight = anim8.newAnimation(player.grid(2, 1),
+                                                    player.animSpeed)
+player.animations.useDownLeft = anim8.newAnimation(player.grid(2, 1),
+                                                   player.animSpeed)
+player.animations.useUpRight = anim8.newAnimation(player.grid(2, 2),
+                                                  player.animSpeed)
+player.animations.useUpLeft = anim8.newAnimation(player.grid(2, 2),
+                                                 player.animSpeed)
 player.animations.hold = anim8.newAnimation(player.grid(1, 1), player.animSpeed)
 player.animations.rollDown = anim8.newAnimation(player.grid('1-3', 4), 0.11)
 player.animations.rollUp = anim8.newAnimation(player.grid('1-3', 5), 0.11)
-player.animations.stopDown = anim8.newAnimation(player.grid('1-3', 6), 0.22, function() player.anim = player.animations.idleDown end)
-player.animations.stopUp = anim8.newAnimation(player.grid('1-3', 7), 0.22, function() player.anim = player.animations.idleUp end)
-player.animations.idleDown = anim8.newAnimation(player.grid('1-4', 8), {1.2, 0.1, 2.4, 0.1})
+player.animations.stopDown = anim8.newAnimation(player.grid('1-3', 6), 0.22,
+                                                function()
+    player.anim = player.animations.idleDown
+end)
+player.animations.stopUp = anim8.newAnimation(player.grid('1-3', 7), 0.22,
+                                              function()
+    player.anim = player.animations.idleUp
+end)
+player.animations.idleDown = anim8.newAnimation(player.grid('1-4', 8),
+                                                {1.2, 0.1, 2.4, 0.1})
 player.animations.idleUp = anim8.newAnimation(player.grid('1-2', 9), 0.22)
-
 
 player.anim = player.animations.idleDown
 
@@ -91,24 +110,23 @@ player.buffer = {} -- input buffer
 local levelHeightStep = 16
 local levelHeight1 = 16
 local levelHeight2 = 32
-local maxHeight = 30      -- height where shadow is smallest
-local minScale  = 0.6     -- smallest shadow size
-local maxScale  = 1.0     -- shadow size on ground
+local maxHeight = 30 -- height where shadow is smallest
+local minScale = 0.6 -- smallest shadow size
+local maxScale = 1.0 -- shadow size on ground
 
 function player:update(dt)
-
-    --d1 = tostring(player.jumping)
+    
     d1 = player.z
-    d2 = player.height
+    -- d2 = tostring(player.jumping)
+    -- d1 = player.height
+    -- d2 = player.z
 
-    player.shadowY = player:getY()+6
+    player.shadowY = player:getY() + 6
 
     if pause.active then player.anim:update(dt) end
     if player.state == -1 or gamestate == 0 then return end
 
-    if player.stunTimer > 0 then
-        player.stunTimer = player.stunTimer - dt
-    end
+    if player.stunTimer > 0 then player.stunTimer = player.stunTimer - dt end
     if player.stunTimer < 0 then
         player.stunTimer = 0
         if player.state == 10 then
@@ -116,7 +134,7 @@ function player:update(dt)
             player:setLinearVelocity(0, 0)
         end
     end
-    
+
     if player.damagedTimer > 0 then
         player.damagedTimer = player.damagedTimer - dt
         player.damagedFlashTime = player.damagedFlashTime - dt
@@ -127,7 +145,7 @@ function player:update(dt)
     end
     if player.damagedTimer < 0 then
         player.damagedTimer = 0
-        --world:collisionClear()
+        -- world:collisionClear()
         world:collisionEventsClear()
     end
 
@@ -141,39 +159,39 @@ function player:update(dt)
 
         player.prevDirX = player.dirX
         player.prevDirY = player.dirY
-    
+
         local dirX = 0
         local dirY = 0
 
         if pause.active then return end
 
-        --jbutton = controlPad:getGamepadAxis("leftx")
+        -- jbutton = controlPad:getGamepadAxis("leftx")
 
-        if love.keyboard.isDown("d") or love.keyboard.isDown("right") or (controlPad and controlPad:getAxis(1) > 0) then
+        if love.keyboard.isDown("d") or love.keyboard.isDown("right") or
+            (controlPad and controlPad:getAxis(1) > 0) then
             dirX = 1
             player.dirX = 1
         end
 
-        if love.keyboard.isDown("a") or love.keyboard.isDown("left") or  (controlPad and controlPad:getAxis(1) < 0) then
+        if love.keyboard.isDown("a") or love.keyboard.isDown("left") or
+            (controlPad and controlPad:getAxis(1) < 0) then
             dirX = -1
             player.dirX = -1
         end
 
-        if love.keyboard.isDown("s") or love.keyboard.isDown("down") or (controlPad and controlPad:getAxis(2) > 0) then
+        if love.keyboard.isDown("s") or love.keyboard.isDown("down") or
+            (controlPad and controlPad:getAxis(2) > 0) then
             dirY = 1
             player.dirY = 1
         end
 
-        if love.keyboard.isDown("w") or love.keyboard.isDown("up") or  (controlPad and controlPad:getAxis(2) < 0) then
+        if love.keyboard.isDown("w") or love.keyboard.isDown("up") or
+            (controlPad and controlPad:getAxis(2) < 0) then
             dirY = -1
             player.dirY = -1
         end
 
-        if dirY == 0 and dirX ~= 0 then
-            player.dirY = 1
-        end
-
-
+        if dirY == 0 and dirX ~= 0 then player.dirY = 1 end
 
         if data.item['left'] == "bow" then
             if love.mouse.isDown(1) then
@@ -204,10 +222,7 @@ function player:update(dt)
             end
         end
 
-
-        if player.aiming then
-            player:setDirFromVector(player.bowVec)
-        end
+        if player.aiming then player:setDirFromVector(player.bowVec) end
 
         if player.walking then
             if player.dirX == 1 then
@@ -225,7 +240,6 @@ function player:update(dt)
             end
         end
 
-
         local vec = vector(dirX, dirY):normalized() * player.speed
         if vec.x ~= 0 or vec.y ~= 0 then
             player:setLinearVelocity(vec.x, vec.y)
@@ -237,11 +251,12 @@ function player:update(dt)
                 player.dustTimer = 0.22
 
                 if player.swimming then
-                    effects:spawn("walkRipple", player:getX(), player:getY()+6)
+                    effects:spawn("walkRipple", player:getX(), player:getY() + 6)
                 else
-                    effects:spawn("walkDust", player:getX(), player:getY()+6, {dir = vec:normalized()})
+                    effects:spawn("walkDust", player:getX(), player:getY() + 6,
+                                  {dir = vec:normalized()})
                 end
-   
+
             end
         else
             player.dustTimer = 0
@@ -253,11 +268,11 @@ function player:update(dt)
                 player:justStop()
             elseif player.aiming then
                 local mvec = toMouseVector(player:getX(), player:getY())
-                --if mvec.y < 0 then player.dirY = -1 end
+                -- if mvec.y < 0 then player.dirY = -1 end
                 player:setDirFromVector(player.bowVec)
                 player:justIdle()
             end
-            --if player.aiming then player.anim:gotoFrame(1) end
+            -- if player.aiming then player.anim:gotoFrame(1) end
         else
             player.walking = true
         end
@@ -298,34 +313,32 @@ function player:update(dt)
             player.rollDelayTimer = 0.3
         end
 
-  elseif player.state == 0.6 then
-            player:checkVerticalTransition()
-            player:checkWater()
-            player.anim:update(dt)
+    elseif player.state == 0.6 then
+        player:checkVerticalTransition()
+        player:checkWater()
+        player.anim:update(dt)
 
-            local heightDiff = 0
-  
-            if player.velocityY ~= 0 then
-                player.y = player.y + player.velocityY * dt
-                player.velocityY = player.velocityY - player.gravity * dt
-                heightDiff = player.ground - player.y
-                player.offsetY = heightDiff
-            end
+        local heightDiff = 0
 
-            if player.y >= player.ground then             
-                player.y = player.ground
-                player.offsetY = player.offsetYDefault
-                player.velocityY = 0
-                player.state = 0              
-            end
+        if player.velocityY ~= 0 then
+            player.y = player.y + player.velocityY * dt
+            player.velocityY = player.velocityY - player.gravity * dt
+            heightDiff = player.ground - player.y
+            player.offsetY = heightDiff
+        end
 
-            player.height = math.max(0, player.ground - player.y)
-            player.jumping = player.height > 10
+        if player.y >= player.ground then
+            player.y = player.ground
+            player.offsetY = player.offsetYDefault
+            player.velocityY = 0
+            player.state = 0
+        end
 
+        player.height = math.max(0, player.ground - player.y)
+        player.jumping = player.height > 20
 
-            local t = math.min(player.height / maxHeight, 1)
-            player.shadowScale = maxScale - t * (maxScale - minScale)
-
+        local t = math.min(player.height / maxHeight, 1)
+        player.shadowScale = maxScale - t * (maxScale - minScale)
 
     elseif player.state >= 1 and player.state < 2 then
 
@@ -333,7 +346,7 @@ function player:update(dt)
         player:checkDamage()
 
         if player.state == 1 then
-            player:setLinearVelocity((player.attackDir*90):unpack())
+            player:setLinearVelocity((player.attackDir * 90):unpack())
         elseif player.state == 1.1 then
             player:setLinearVelocity(0, 0)
         end
@@ -344,7 +357,8 @@ function player:update(dt)
                 player.anim:gotoFrame(2)
                 -- animTimer for finished sword swing stance
                 player.animTimer = 0.25
-                effects:spawn("slice", player:getX(), player:getY()+1, player.attackDir)
+                effects:spawn("slice", player:getX(), player:getY() + 1,
+                              player.attackDir)
                 player:swordDamage()
             elseif player.state == 1.1 then
                 player.state = 0
@@ -355,7 +369,7 @@ function player:update(dt)
     elseif player.state == 2 or player.state == 3.1 then
         player:checkDamage()
         if player.state == 2 then
-            --player:setLinearVelocity(0, 0)
+            -- player:setLinearVelocity(0, 0)
         end
         player.animTimer = player.animTimer - dt
 
@@ -364,19 +378,20 @@ function player:update(dt)
             player:resetAnimation(player.dir)
             player.aiming = false
         end
-    
+
     elseif player.state == 3 then
 
         -- while drawing the bow back, always 'use' the item
         player:useItem(player.bowRecoveryTime)
-    
+
     elseif player.state == 4 or player.state == 4.1 then
 
         -- while arming the grapple, always 'use' the item
         -- player:useItem(1)
 
         if player.state == 4.1 and grapple.state == -1 then
-            if distanceBetween(player:getX(), player:getY(), grapple.x, grapple.y) < 12 then
+            if distanceBetween(player:getX(), player:getY(), grapple.x,
+                               grapple.y) < 12 then
                 grapple.state = 0
                 player.state = 0
                 player:resetAnimation(player.dir)
@@ -385,8 +400,8 @@ function player:update(dt)
 
     elseif player.state == 4.2 then
 
-        player:setX( player:getX() + (grapple.dir.x * grapple.speed * dt) )
-        player:setY( player:getY() + (grapple.dir.y * grapple.speed * dt) )
+        player:setX(player:getX() + (grapple.dir.x * grapple.speed * dt))
+        player:setY(player:getY() + (grapple.dir.y * grapple.speed * dt))
 
     elseif player.state == 11 then -- got an item
 
@@ -396,14 +411,12 @@ function player:update(dt)
             player.state = 0
             player:resetAnimation(player.dir)
         end
-    
+
     elseif player.state == 11.1 then -- got an item (delay)
 
         player.animTimer = player.animTimer - dt
 
-        if player.animTimer < 0 then
-            player:gotItem(player.holdSprite)
-        end
+        if player.animTimer < 0 then player:gotItem(player.holdSprite) end
 
     elseif player.state == 12 then -- transition
 
@@ -419,13 +432,13 @@ end
 function player:draw()
 
     if player.stunTimer > 0 then
-        love.graphics.setColor(223/255,106/255,106/255,1)
+        love.graphics.setColor(223 / 255, 106 / 255, 106 / 255, 1)
     elseif player.damagedTimer > 0 then
         local alpha = 0.8
         if player.damagedBool < 0 then alpha = 0.55 end
-        love.graphics.setColor(1,1,1,alpha)
+        love.graphics.setColor(1, 1, 1, alpha)
     else
-        love.graphics.setColor(1,1,1,1)
+        love.graphics.setColor(1, 1, 1, 1)
     end
 
     -- Sword sprite
@@ -435,76 +448,95 @@ function player:draw()
     local swLayer = -1
     local arrowSpr = sprites.items.arrow
     local bowSpr = sprites.items.bow1
-    --local hookSpr = sprites.items.grappleArmed
-    if player.aiming and (player.animTimer > 0 or data.arrowCount < 1) then bowSpr = sprites.items.bow2 end
-    --if player.state == 4.1 or player.state == 4.2 then hookSpr = sprites.items.grappleHandle end
+    -- local hookSpr = sprites.items.grappleArmed
+    if player.aiming and (player.animTimer > 0 or data.arrowCount < 1) then
+        bowSpr = sprites.items.bow2
+    end
+    -- if player.state == 4.1 or player.state == 4.2 then hookSpr = sprites.items.grappleHandle end
 
     local swordRot = 0
     if player.state == 1.1 then
         local tempVec = 0
         if player.comboCount % 2 == 0 then
-            tempVec = player.attackDir:rotated(math.pi/2)
+            tempVec = player.attackDir:rotated(math.pi / 2)
         else
-            tempVec = player.attackDir:rotated(math.pi/-2)
+            tempVec = player.attackDir:rotated(math.pi / -2)
         end
         swordRot = math.atan2(tempVec.y, tempVec.x)
         swX = tempVec.x * 12
         swY = tempVec.y * 12
 
-        if swY > 0 then
-            swLayer = 1
-        end
+        if swY > 0 then swLayer = 1 end
     end
 
     local px = player:getX()
-    local py = player:getY()+1
+    local py = player:getY() + 1
 
     local bowLayer = -1
     player.bowVec = toMouseVector(px, py)
     local bowScaleY = 1
     if player.bowVec.x < 0 then bowScaleY = -1 end
     local bowRot = math.atan2(player.bowVec.y, player.bowVec.x)
-    local bowOffX = player.bowVec.x*6
-    local bowOffY = player.bowVec.y*6
-    local hookOffX = player.bowVec.x*6
-    local hookOffY = player.bowVec.y*6
-    player.arrowOffX = player.bowVec.x*6
-    player.arrowOffY = player.bowVec.y*6
+    local bowOffX = player.bowVec.x * 6
+    local bowOffY = player.bowVec.y * 6
+    local hookOffX = player.bowVec.x * 6
+    local hookOffY = player.bowVec.y * 6
+    player.arrowOffX = player.bowVec.x * 6
+    player.arrowOffY = player.bowVec.y * 6
 
-    if bowRot > -1 * player.rotateMargin or bowRot < (math.pi - player.rotateMargin) * -1 then
-        bowLayer = 1
-    end
+    if bowRot > -1 * player.rotateMargin or bowRot <
+        (math.pi - player.rotateMargin) * -1 then bowLayer = 1 end
 
-    love.graphics.draw(sprites.playerShadow, px, player.shadowY, nil, player.shadowScale, player.shadowScale, sprites.playerShadow:getWidth()/2, sprites.playerShadow:getHeight()/2)
+    love.graphics.draw(sprites.playerShadow, px, player.shadowY, nil,
+                       player.shadowScale, player.shadowScale,
+                       sprites.playerShadow:getWidth() / 2,
+                       sprites.playerShadow:getHeight() / 2)
 
     if player.state == 1.1 and swLayer == -1 then
-        love.graphics.draw(swSpr, px+swX, py+swY, swordRot, nil, nil, swSpr:getWidth()/2, swSpr:getHeight()/2)
+        love.graphics.draw(swSpr, px + swX, py + swY, swordRot, nil, nil,
+                           swSpr:getWidth() / 2, swSpr:getHeight() / 2)
     end
 
     if player.aiming and bowLayer == -1 then
-        love.graphics.draw(bowSpr, px + bowOffX, py + bowOffY, bowRot, 1.15, bowScaleY, bowSpr:getWidth()/2, bowSpr:getHeight()/2)
-        if data.arrowCount > 0 and player.animTimer <= 0 then love.graphics.draw(arrowSpr, px + bowOffX, py + bowOffY, bowRot, 0.85, nil, arrowSpr:getWidth()/2, arrowSpr:getHeight()/2) end
-        --love.graphics.draw(hookSpr, px + hookOffX, py + hookOffY, bowRot, 1.15, nil, hookSpr:getWidth()/2, hookSpr:getHeight()/2)
+        love.graphics.draw(bowSpr, px + bowOffX, py + bowOffY, bowRot, 1.15,
+                           bowScaleY, bowSpr:getWidth() / 2,
+                           bowSpr:getHeight() / 2)
+        if data.arrowCount > 0 and player.animTimer <= 0 then
+            love.graphics.draw(arrowSpr, px + bowOffX, py + bowOffY, bowRot,
+                               0.85, nil, arrowSpr:getWidth() / 2,
+                               arrowSpr:getHeight() / 2)
+        end
+        -- love.graphics.draw(hookSpr, px + hookOffX, py + hookOffY, bowRot, 1.15, nil, hookSpr:getWidth()/2, hookSpr:getHeight()/2)
     end
 
     if player.stunTimer > 0 then love.graphics.setShader(shaders.whiteout) end
 
-    player.anim:draw(sprites.playerSheet, player:getX(), player:getY()-2, nil, player.dirX, 1, 9.5, player.offsetY)
+    player.anim:draw(sprites.playerSheet, player:getX(), player:getY() - 2, nil,
+                     player.dirX, 1, 9.5, player.offsetY)
 
     love.graphics.setShader()
 
     if player.state == 1.1 and swLayer == 1 then
-        love.graphics.draw(swSpr, px+swX, py+swY, swordRot, nil, nil, swSpr:getWidth()/2, swSpr:getHeight()/2)
+        love.graphics.draw(swSpr, px + swX, py + swY, swordRot, nil, nil,
+                           swSpr:getWidth() / 2, swSpr:getHeight() / 2)
     end
 
     if player.aiming and bowLayer == 1 then
-        love.graphics.draw(bowSpr, px + bowOffX, py + bowOffY, bowRot, 1.15, bowScaleY, bowSpr:getWidth()/2, bowSpr:getHeight()/2)
-        if data.arrowCount > 0 and player.animTimer <= 0 then love.graphics.draw(arrowSpr, px + bowOffX, py + bowOffY, bowRot, 0.85, nil, arrowSpr:getWidth()/2, arrowSpr:getHeight()/2) end
-        --love.graphics.draw(hookSpr, px + hookOffX, py + hookOffY, bowRot, 1.15, nil, hookSpr:getWidth()/2, hookSpr:getHeight()/2)
+        love.graphics.draw(bowSpr, px + bowOffX, py + bowOffY, bowRot, 1.15,
+                           bowScaleY, bowSpr:getWidth() / 2,
+                           bowSpr:getHeight() / 2)
+        if data.arrowCount > 0 and player.animTimer <= 0 then
+            love.graphics.draw(arrowSpr, px + bowOffX, py + bowOffY, bowRot,
+                               0.85, nil, arrowSpr:getWidth() / 2,
+                               arrowSpr:getHeight() / 2)
+        end
+        -- love.graphics.draw(hookSpr, px + hookOffX, py + hookOffY, bowRot, 1.15, nil, hookSpr:getWidth()/2, hookSpr:getHeight()/2)
     end
 
     if player.state == 11 then
-        love.graphics.draw(player.holdSprite, player:getX(), player:getY()-18, nil, nil, nil, player.holdSprite:getWidth()/2, player.holdSprite:getHeight()/2)
+        love.graphics.draw(player.holdSprite, player:getX(), player:getY() - 18,
+                           nil, nil, nil, player.holdSprite:getWidth() / 2,
+                           player.holdSprite:getHeight() / 2)
     end
 
 end
@@ -512,7 +544,8 @@ end
 function player:checkDamage()
     if player.damagedTimer > 0 then return end
 
-    local hitEnemies = world:queryCircleArea(player:getX(), player:getY(), 5, {'Enemy'})
+    local hitEnemies = world:queryCircleArea(player:getX(), player:getY(), 5,
+                                             {'Enemy'})
     if #hitEnemies > 0 then
         local e = hitEnemies[1]
         if e.parent.dizzyTimer <= 0 and e.parent.stunTimer <= 0 then
@@ -521,8 +554,10 @@ function player:checkDamage()
     end
 
     -- to fix the overlap issue, check distance as well
-    for _,e in ipairs(enemies) do
-        if e.physics and distanceBetween(e.physics:getX(), e.physics:getY(), player:getX(), player:getY()) < 4 then
+    for _, e in ipairs(enemies) do
+        if e.physics and
+            distanceBetween(e.physics:getX(), e.physics:getY(), player:getX(),
+                            player:getY()) < 4 then
             player:hurt(0.5, e.physics:getX(), e.physics:getY())
         end
     end
@@ -540,71 +575,90 @@ function player:checkTransition()
         if t.collider.type == "instant" then
             triggerTransition(t.collider.id, t.collider.destX, t.collider.destY)
         else
-            curtain:call(t.collider.id, t.collider.destX, t.collider.destY, t.collider.type)
+            curtain:call(t.collider.id, t.collider.destX, t.collider.destY,
+                         t.collider.type)
         end
-        --triggerTransition(t.collider.id, t.collider.destX, t.collider.destY)
+        -- triggerTransition(t.collider.id, t.collider.destX, t.collider.destY)
     end
 end
 
 function player:checkVerticalTransition()
-    if player:enter('Ground1') then
 
-        if player.z == 1 then
-            player:setY(player:getY()-levelHeightStep)
-            player.ground = player.ground - levelHeightStep
-            player.offsetY = player.offsetY + levelHeightStep
-            player.z = 2
-        else
-            player:setY(player:getY()-levelHeightStep)
-            player.ground = player.ground - levelHeightStep
-            player.offsetY = player.offsetY + levelHeightStep
-            player.z = 1
+    if player.jumping then
+        if player:enter('Ground1') then
+
+            local w = player:getEnterCollisionData('Ground1')
+            d2 = w.collider.name
+            if w.collider.name == "g1" then
+                player:setY(player:getY() - levelHeightStep)
+                player.ground = player.ground - levelHeightStep
+                player.offsetY = player.offsetY + levelHeightStep
+                player.z = 1
+            end
+
+            if w.collider.name == "g2" then
+                player:setY(player:getY() - (levelHeightStep * 2))
+                player.ground = player.ground - (levelHeightStep * 2)
+                player.offsetY = player.offsetY + (levelHeightStep * 2)
+                player.z = 2
+            end
+
         end
-        
     end
+
 end
 
 function player:checkWater()
 
     if player.state ~= 0.6 then
-        if player:enter('Water') then    
+        if player:enter('Water') then
             player.swimming = true
-            sprites.playerSheet = love.graphics.newImage('sprites/player/playerSheet1water.png')
+            sprites.playerSheet = love.graphics.newImage(
+                                      'sprites/player/playerSheet1water.png')
         end
-        
-        if player:enter('Ground') then  
+
+        if player:enter('Ground') then
             player.swimming = false
-            sprites.playerSheet = love.graphics.newImage('sprites/player/playerSheet1.png')
+            sprites.playerSheet = love.graphics.newImage(
+                                      'sprites/player/playerSheet1.png')
         end
     end
- 
-    if player:exit('Ground1') then  
+
+    if player:exit('Ground1') then
+        local w = player:getEnterCollisionData('Ground1')
 
         if player.jumping then
-             if player.z == 1 then    
-                player:setY(player:getY()+levelHeight1)
+            if w.collider.name == "g1" then
+                player:setY(player:getY() + levelHeight1)
                 player.ground = player.ground + levelHeight1
-                player.z = 0
-            end
-        else
-            if player.z == 1 then    
-                player:setY(player:getY()+levelHeight1)
-                player.ground = player.ground + levelHeight1
-                player.z = 0
-               
+                -- player.z = 0
             end
 
-            if player.z > 1 then
-                player:setY(player:getY()+levelHeight2)
+            if w.collider.name == "g2" then
+                player:setY(player:getY() + levelHeight2)
                 player.ground = player.ground + levelHeight2
-                player.z = 0
-    
+                -- player.z = 0
+            end
+        else
+            if player.z > 0 then
+                if w.collider.name == "g1" then
+                    player:setY(player:getY() + levelHeight1)
+                    player.ground = player.ground + levelHeight1
+                    player.z = 0
+
+                end
+
+                if w.collider.name == "g2" then
+                    player:setY(player:getY() + levelHeight2)
+                    player.ground = player.ground + levelHeight2
+                    player.z = 0
+
+                end
             end
 
         end
-        --need to check player direction
+        -- need to check player direction
     end
-    
 
 end
 
@@ -616,11 +670,12 @@ function player:hurt(damage, srcX, srcY)
     dj.play(sounds.player.hurt, "static", "effect")
     player.health = player.health - damage
     player.state = 10 -- damaged
-    player:setLinearVelocity((getFromToVector(srcX, srcY, player:getX(), player:getY()) * 300):unpack())
+    player:setLinearVelocity((getFromToVector(srcX, srcY, player:getX(),
+                                              player:getY()) * 300):unpack())
     player.stunTimer = 0.075
     player.aiming = false
 
-    --gameover
+    -- gameover
     if player.health <= 0 then
         gamestate = 0
         destroyAll()
@@ -656,7 +711,7 @@ function player:swingSword()
         end
     end
 
-    --player.anim:gotoFrame(1)
+    -- player.anim:gotoFrame(1)
     -- animTimer for sword wind-up
     player.animTimer = 0.075
 
@@ -664,42 +719,38 @@ end
 
 function player:swordDamage()
     -- Query for enemies to hit with the sword
-    --local hitEnemies = world:queryCircleArea(player:getX(), player:getY(), 24, {'Enemy'})
+    -- local hitEnemies = world:queryCircleArea(player:getX(), player:getY(), 24, {'Enemy'})
 
     local px, py = player:getPosition()
     local dir = player.attackDir:normalized()
-    local rightDir = dir:rotated(math.pi/2)
-    local leftDir = dir:rotated(math.pi/-2)
+    local rightDir = dir:rotated(math.pi / 2)
+    local leftDir = dir:rotated(math.pi / -2)
     local polygon = {
-        px + dir.x*20,
-        py + dir.y*20,
-        px + dir:rotated(math.pi/8).x*20,
-        py + dir:rotated(math.pi/8).y*20,
-        px + dir:rotated(math.pi/4).x*20,
-        py + dir:rotated(math.pi/4).y*20,
-        px + dir:rotated(3*math.pi/8).x*20,
-        py + dir:rotated(3*math.pi/8).y*20,
-        px + rightDir.x*22,
-        py + rightDir.y*22,
-        px + rightDir.x*22 + rightDir:rotated(math.pi/2).x*6,
-        py + rightDir.y*22 + rightDir:rotated(math.pi/2).y*6,
-        px + leftDir.x*22 + leftDir:rotated(math.pi/-2).x*6,
-        py + leftDir.y*22 + leftDir:rotated(math.pi/-2).y*6,
-        px + leftDir.x*22,
-        py + leftDir.y*22,
-        px + dir:rotated(3*math.pi/-8).x*20,
-        py + dir:rotated(3*math.pi/-8).y*20,
-        px + dir:rotated(math.pi/-4).x*20,
-        py + dir:rotated(math.pi/-4).y*20,
-        px + dir:rotated(math.pi/-8).x*20,
-        py + dir:rotated(math.pi/-8).y*20,
+        px + dir.x * 20, py + dir.y * 20, px + dir:rotated(math.pi / 8).x * 20,
+        py + dir:rotated(math.pi / 8).y * 20,
+        px + dir:rotated(math.pi / 4).x * 20,
+        py + dir:rotated(math.pi / 4).y * 20,
+        px + dir:rotated(3 * math.pi / 8).x * 20,
+        py + dir:rotated(3 * math.pi / 8).y * 20, px + rightDir.x * 22,
+        py + rightDir.y * 22,
+        px + rightDir.x * 22 + rightDir:rotated(math.pi / 2).x * 6,
+        py + rightDir.y * 22 + rightDir:rotated(math.pi / 2).y * 6,
+        px + leftDir.x * 22 + leftDir:rotated(math.pi / -2).x * 6,
+        py + leftDir.y * 22 + leftDir:rotated(math.pi / -2).y * 6,
+        px + leftDir.x * 22, py + leftDir.y * 22,
+        px + dir:rotated(3 * math.pi / -8).x * 20,
+        py + dir:rotated(3 * math.pi / -8).y * 20,
+        px + dir:rotated(math.pi / -4).x * 20,
+        py + dir:rotated(math.pi / -4).y * 20,
+        px + dir:rotated(math.pi / -8).x * 20,
+        py + dir:rotated(math.pi / -8).y * 20
     }
 
-    local range = math.random()/4
-    dj.play(sounds.items.sword, "static", "effect", 1, 1+range)
+    local range = math.random() / 4
+    dj.play(sounds.items.sword, "static", "effect", 1, 1 + range)
 
     local hitEnemies = world:queryPolygonArea(polygon, {'Enemy'})
-    for _,e in ipairs(hitEnemies) do
+    for _, e in ipairs(hitEnemies) do
         local knockbackDir = getPlayerToSelfVector(e:getX(), e:getY())
         e.parent:hit(1, knockbackDir, 0.1)
     end
@@ -707,7 +758,8 @@ end
 
 function player:useItem(duration)
 
-    if player.state ~= 3 and player.state ~= 3.1 and player.state ~= 4 and player.state ~= 4.1 then
+    if player.state ~= 3 and player.state ~= 3.1 and player.state ~= 4 and
+        player.state ~= 4.1 then
         player.state = 2
         player:setLinearVelocity(0, 0)
     end
@@ -769,24 +821,26 @@ function player:useFire()
 
     player:useItem(0.35)
     player:useSet()
-    local oppDir = toMouseVector(player:getX(), player:getY()):rotated(math.pi)*80
+    local oppDir =
+        toMouseVector(player:getX(), player:getY()):rotated(math.pi) * 80
     player:setLinearVelocity(oppDir.x, oppDir.y)
-    spawnFlame(player:getX()-2, player:getY()-2)
+    spawnFlame(player:getX() - 2, player:getY() - 2)
 end
 
 function player:useBow()
-    if player.state ~= 0 then
-        player:addToBuffer("bow")
-    end
+    if player.state ~= 0 then player:addToBuffer("bow") end
 
     if player.state == 0 and data.arrowCount > 0 then
         if player.aiming and player.animTimer <= 0 then
-            spawnArrow(player:getX() + player.arrowOffX, player:getY()+1+player.arrowOffY)
-            local oppDir = toMouseVector(player:getX() + player.arrowOffX, player:getY()+1+player.arrowOffY):rotated(math.pi)*120
+            spawnArrow(player:getX() + player.arrowOffX,
+                       player:getY() + 1 + player.arrowOffY)
+            local oppDir = toMouseVector(player:getX() + player.arrowOffX,
+                                         player:getY() + 1 + player.arrowOffY):rotated(
+                               math.pi) * 120
             player:setLinearVelocity(oppDir.x, oppDir.y)
             player.animTimer = player.bowRecoveryTime
             player.state = 3.1
-            --player.aiming = false
+            -- player.aiming = false
         end
     end
 end
@@ -794,7 +848,8 @@ end
 function player:usegrapple()
     if player.state == 0 then
         player.state = 4.1
-        player.attackDir = toMouseVector(player:getX() + player.arrowOffX, player:getY()+1+player.arrowOffY)
+        player.attackDir = toMouseVector(player:getX() + player.arrowOffX,
+                                         player:getY() + 1 + player.arrowOffY)
         player:useSet()
         grapple:shoot(player.attackDir)
         player:setLinearVelocity(0, 0)
@@ -803,7 +858,7 @@ function player:usegrapple()
 end
 
 function player:resetAnimation(direction)
-    --player.anim = player.animations[direction]
+    -- player.anim = player.animations[direction]
     if player.dirX == 1 then
         if player.dirY == 1 then
             player.anim = player.animations.idleDown
@@ -837,25 +892,22 @@ end
 
 function player:interact()
     -- query for interactable walls
-    local interactables = world:queryCircleArea(player:getX(), player:getY(), 12, {'Wall'})
-    for _,i in ipairs(interactables) do
-        if i.parent then
-            i.parent:interact()
-        end
+    local interactables = world:queryCircleArea(player:getX(), player:getY(),
+                                                12, {'Wall'})
+    for _, i in ipairs(interactables) do
+        if i.parent then i.parent:interact() end
     end
 end
 
 function player:jump()
 
-    if player.state == 0.6 then     
-        return
-    end
+    if player.state == 0.6 then return end
 
-    player.state = 0.6    
+    player.state = 0.6
     player.y = player:getY()
     player.ground = player.y
-    
-  --[[   if player.z ==1 then
+
+    --[[   if player.z ==1 then
          player.ground = player.ground + levelHeight1
     end
 
@@ -880,12 +932,10 @@ function player:jump()
         dirY = 1
     end
 
-    if love.keyboard.isDown("w") or love.keyboard.isDown("up") then
-        dirY = -1
-    end
-    
+    if love.keyboard.isDown("w") or love.keyboard.isDown("up") then dirY = -1 end
+
     player:setLinearDamping(1.75)
-    local dirVec = vector(dirX, dirY):normalized()*100
+    local dirVec = vector(dirX, dirY):normalized() * 100
     player:setLinearVelocity(dirVec.x, dirVec.y)
 
 end
@@ -921,7 +971,10 @@ function player:roll()
         return
     end
 
-    if pause.active then player:justIdle() return end
+    if pause.active then
+        player:justIdle()
+        return
+    end
 
     local dirX = 0
     local dirY = 0
@@ -938,9 +991,7 @@ function player:roll()
         dirY = 1
     end
 
-    if love.keyboard.isDown("w") or love.keyboard.isDown("up") then
-        dirY = -1
-    end
+    if love.keyboard.isDown("w") or love.keyboard.isDown("up") then dirY = -1 end
 
     if dirX == 0 and dirY == 0 then return end -- must have some direction to roll
 
@@ -955,28 +1006,34 @@ function player:roll()
     player.anim:gotoFrame(1)
 
     player:setLinearDamping(1.75)
-    local dirVec = vector(dirX, dirY):normalized()*160
+    local dirVec = vector(dirX, dirY):normalized() * 160
     player:setLinearVelocity(dirVec.x, dirVec.y)
 
-    local range = math.random()/5
-    dj.play(sounds.player.roll, "static", "effect", 1, 1+range)
-    
-    effects:spawn("walkDust", player:getX(), player:getY()+6, {dir = dirVec, scale = 0.8})
-    effects:spawn("walkDust", player:getX(), player:getY()+6, {dir = dirVec:rotated(math.pi/8), scale = 0.6})
-    effects:spawn("walkDust", player:getX(), player:getY()+6, {dir = dirVec:rotated(math.pi/-8), scale = 0.6})
-    effects:spawn("walkDust", player:getX(), player:getY()+6, {dir = dirVec:rotated(math.pi/4), scale = 0.6})
-    effects:spawn("walkDust", player:getX(), player:getY()+6, {dir = dirVec:rotated(math.pi/-4), scale = 0.6})
+    local range = math.random() / 5
+    dj.play(sounds.player.roll, "static", "effect", 1, 1 + range)
+
+    effects:spawn("walkDust", player:getX(), player:getY() + 6,
+                  {dir = dirVec, scale = 0.8})
+    effects:spawn("walkDust", player:getX(), player:getY() + 6,
+                  {dir = dirVec:rotated(math.pi / 8), scale = 0.6})
+    effects:spawn("walkDust", player:getX(), player:getY() + 6,
+                  {dir = dirVec:rotated(math.pi / -8), scale = 0.6})
+    effects:spawn("walkDust", player:getX(), player:getY() + 6,
+                  {dir = dirVec:rotated(math.pi / 4), scale = 0.6})
+    effects:spawn("walkDust", player:getX(), player:getY() + 6,
+                  {dir = dirVec:rotated(math.pi / -4), scale = 0.6})
 end
 
 function player:setDirFromVector(vec)
     local rad = math.atan2(vec.y, vec.x)
-    if rad >= player.rotateMargin*-1 and rad < math.pi/2 then
+    if rad >= player.rotateMargin * -1 and rad < math.pi / 2 then
         player.dirX = 1
         player.dirY = 1
-    elseif (rad >= math.pi/2 and rad < math.pi) or (rad < (math.pi - player.rotateMargin)*-1) then
+    elseif (rad >= math.pi / 2 and rad < math.pi) or
+        (rad < (math.pi - player.rotateMargin) * -1) then
         player.dirX = -1
         player.dirY = 1
-    elseif rad < 0 and rad > math.pi/-2 then
+    elseif rad < 0 and rad > math.pi / -2 then
         player.dirX = 1
         player.dirY = -1
     else
@@ -1019,22 +1076,18 @@ function player:justIdle()
     else
         player.anim = player.animations.idleDown
     end
-    --player.anim:gotoFrame(1)
+    -- player.anim:gotoFrame(1)
 end
 
 function player:processBuffer(dt)
-    for i=#player.buffer,1,-1 do
+    for i = #player.buffer, 1, -1 do
         player.buffer[i][2] = player.buffer[i][2] - dt
     end
-    for i=#player.buffer,1,-1 do
-        if player.buffer[i][2] <= 0 then
-            table.remove(player.buffer, i)
-        end
+    for i = #player.buffer, 1, -1 do
+        if player.buffer[i][2] <= 0 then table.remove(player.buffer, i) end
     end
 
-    if player.state == 0 then
-        player:useBuffer()
-    end
+    if player.state == 0 then player:useBuffer() end
 end
 
 function player:addToBuffer(action)
@@ -1047,12 +1100,10 @@ end
 
 function player:useBuffer()
     local action = nil
-    if #player.buffer > 0 then
-        action = player.buffer[1][1]
-    end
+    if #player.buffer > 0 then action = player.buffer[1][1] end
 
     -- clear buffer
-    for k,v in pairs(player.buffer) do player.buffer[k]=nil end
+    for k, v in pairs(player.buffer) do player.buffer[k] = nil end
 
     if action == nil then return end
 
@@ -1076,14 +1127,10 @@ end
 
 function player:isBowButtonDown()
     if data.item['z'] == 4 then -- bow
-        if love.mouse.isDown(1) then
-            return true
-        end
+        if love.mouse.isDown(1) then return true end
     end
     if data.item['x'] == 4 then -- bow
-        if love.mouse.isDown(2) then
-            return true
-        end
+        if love.mouse.isDown(2) then return true end
     end
     return false
 end
